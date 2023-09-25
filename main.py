@@ -1,8 +1,8 @@
 import pandas as pd
 
-df1 = pd.read_excel ('Customer-Churn-and-Dataset/customer.xlsx')
-df2 = pd.read_excel ('Customer-Churn-and-Dataset/churn.xlsx')
-df3 = pd.read_excel ('Customer-Churn-and-Dataset/ptransaction.xlsx')
+df1 = pd.read_excel ('Customer-Churn-Dataset-Preparation/customer.xlsx')
+df2 = pd.read_excel ('Customer-Churn-Dataset-Preparation/churn.xlsx')
+df3 = pd.read_excel ('Customer-Churn-Dataset-Preparation/ptransaction.xlsx')
 
 # to display dataset dimension in row and column
 print("Customer dataset: ", df1.shape)
@@ -91,7 +91,7 @@ df_merge.to_csv('CustomerChurn.csv')
 import warnings
 warnings.filterwarnings('ignore')
 
-df = pd.read_csv('data/CustomerChurn.csv')
+df = pd.read_csv('Customer-Churn-Dataset-Preparation/CustomerChurn.csv')
 
 # show basic statistics for numerical columns (count, mean, std, min, max, 25%, 50%, 75%)
 print(df.describe())   
@@ -122,7 +122,7 @@ print(df['Gender'].value_counts())
 # save the data into a CSV file 
 df.to_csv('ChurnProcessed.csv')
 
-df = pd.read_csv('data/ChurnProcessed.csv')
+df = pd.read_csv('Customer-Churn-Dataset-Preparation/ChurnProcessed.csv')
 
 #For Normal Distribution = Age / SinceLastTrx
 #get acceptable range h - l
