@@ -1,0 +1,6 @@
+import pandas as pd
+
+df1 = pd.read_excel ('data/customer.xlsx')
+df2 = pd.read_excel ('data/churn.xlsx')
+df3 = pd.read_excel ('data/ptransaction.xlsx')
+
