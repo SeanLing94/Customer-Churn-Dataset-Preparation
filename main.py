@@ -123,6 +123,7 @@ df.to_csv('ChurnProcessed.csv')
 
 df = pd.read_csv('data/ChurnProcessed.csv')
 
+#For Normal Distribution = Age / SinceLastTrx
 #get acceptable range h - l
 # find the highest value allowed h
 h1 = df['Age'].mean() + 3*df['Age'].std() 
@@ -140,3 +141,62 @@ df2_outliers = df[(df['SinceLastTrx'] > h2) | (df['SinceLastTrx'] < w2)]
 # find the number of outliers
 print('No. of outliers (mean-std) in Age = ', df1_outliers.shape[0]) 
 print('No. of outliers (mean-std) in SinceLastTrx = ', df2_outliers.shape[0])
+
+#For Skewed Distribution =  MaxTrxValue / MinTrxValue / TotalTrxValue 
+# find the upper/lower limits for each attribute
+pct25_ttl = df['TotalTrxValue'].quantile(0.25) 
+pct75_ttl = df['TotalTrxValue'].quantile(0.75) 
+pct25_max = df['MaxTrxValue'].quantile(0.25) 
+pct75_max = df['MaxTrxValue'].quantile(0.75) 
+pct25_min = df['MinTrxValue'].quantile(0.25) 
+pct75_min = df['MinTrxValue'].quantile(0.75) 
+
+# calculate the iqr and range for each attribute
+iqr_ttl = pct75_ttl - pct25_ttl 
+up_ttl = pct75_ttl + 1.5 * iqr_ttl 
+low_ttl = pct25_ttl - 1.5 * iqr_ttl 
+iqr_max = pct75_max - pct25_max 
+up_max = pct75_max + 1.5 * iqr_max 
+low_max = pct25_max - 1.5 * iqr_max 
+iqr_min = pct75_min - pct25_min 
+up_min = pct75_min + 1.5 * iqr_min 
+low_min = pct25_min - 1.5 * iqr_min 
+
+# detect and print number of outliers in each attribute
+df3_outliers = df[(df['TotalTrxValue'] > up_ttl) | (df['TotalTrxValue'] < low_ttl)] 
+print('No. of outliers (IQR) in TotalTrxValue = ', df3_outliers.shape[0]) 
+df4_outliers = df[(df['MaxTrxValue'] > up_max) | (df['MaxTrxValue'] < low_max)] 
+print('No. of outliers (IQR) in MaxTrxValue = ', df4_outliers.shape[0]) 
+df5_outliers = df[(df['MinTrxValue'] > up_min) | (df['MinTrxValue'] < low_min)] 
+print('No. of outliers (IQR) in MinTrxValue = ', df5_outliers.shape[0]) 
+
+import matplotlib.pyplot as plt 
+import seaborn as sb
+
+plt.figure(figsize=(10,15)) # define the plot width and height 
+
+# histogram for each of these attributes to observe the data
+# subplot(x, y, z) where x=rownum, y=colnum, z=plotnum, x(y)must be >=z
+plt.subplot(3,1,1) 
+sb.distplot(df['MinTrxValue']) 
+plt.subplot(3,1,2)  
+sb.distplot(df['MaxTrxValue']) 
+plt.subplot(3,1,3) 
+sb.distplot(df['TotalTrxValue'])   
+
+plt.savefig('plot_dist.png')
+
+import numpy as np
+# apply sqrt on attributes that have outliers
+# quare root transformation
+df['SqrtTotal'] = np.sqrt(df['TotalTrxValue'])
+df['SqrtMax'] = np.sqrt(df['MaxTrxValue'])
+df['SqrtMin'] = np.sqrt(df['MinTrxValue'])
+
+# observe that the values range has been reduced using the following example codes
+print ('SqrtTotal min/max: ', df['SqrtTotal'].min(), df['SqrtTotal'].max()) 
+print ('SqrtMax min/max: ', df['SqrtMax'].min(), df['SqrtMax'].max())
+print ('SqrtMin min/max: ', df['SqrtMin'].min(), df['SqrtMin'].max())
+
+# save the data into a CSV file 
+df.to_csv('ChurnFinal.csv')
