@@ -57,6 +57,7 @@ df_merge = df_merge.merge(df3, on='CustomerId', how='left')
 # observe the dataset attributes and data types
 print(df_merge.info())
 
+# identify missing value
 for i, col in enumerate(df_merge.columns): 
     print(col, df_merge[col].isna().sum())
 
