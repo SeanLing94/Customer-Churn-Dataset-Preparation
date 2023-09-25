@@ -86,3 +86,37 @@ print(df_merge.info())
 
 # save the data into a cvs file
 df_merge.to_csv('CustomerChurn.csv')
+
+import warnings
+warnings.filterwarnings('ignore')
+
+df = pd.read_csv('data/CustomerChurn.csv')
+
+# show basic statistics for numerical columns (count, mean, std, min, max, 25%, 50%, 75%)
+print(df.describe())   
+
+# show skewness and kurtusis of a particular columns
+print('-----------Skewness--------------')
+print(df.skew())
+
+# show the values exist in the attribute and their counts
+print(df['Gender'].value_counts())
+print(df['Churn'].value_counts())
+print(df['PostalCode'].value_counts())
+
+# further exploration to check values
+print(df['Cash'].value_counts())
+print(df['Cheque'].value_counts())
+print(df['CreditCard'].value_counts())
+
+# to locate mänlich in Gender attribute and replace it with male
+df.loc[df['Gender'] == 'mänlich', 'Gender'] = 'male' 
+
+# to locate weiblich in Gender attribute and replace it with female
+df.loc[df['Gender'] == 'weiblich', 'Gender'] = 'female'
+
+# to confirm the Gender attribute values are correct
+print(df['Gender'].value_counts())
+
+# save the data into a CSV file 
+df.to_csv('ChurnProcessed.csv')
