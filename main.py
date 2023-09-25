@@ -120,3 +120,23 @@ print(df['Gender'].value_counts())
 
 # save the data into a CSV file 
 df.to_csv('ChurnProcessed.csv')
+
+df = pd.read_csv('data/ChurnProcessed.csv')
+
+#get acceptable range h - l
+# find the highest value allowed h
+h1 = df['Age'].mean() + 3*df['Age'].std() 
+h2 = df['SinceLastTrx'].mean() + 3*df['SinceLastTrx'].std() 
+
+# find the lowest value allowed l
+w1 = df['Age'].mean() - 3*df['Age'].std()
+w2 = df['SinceLastTrx'].mean() - 3*df['SinceLastTrx'].std()
+
+
+# get outliers based on the range identified between h and l
+df1_outliers = df[(df['Age'] > h1) | (df['Age'] < w1)]
+df2_outliers = df[(df['SinceLastTrx'] > h2) | (df['SinceLastTrx'] < w2)]
+
+# find the number of outliers
+print('No. of outliers (mean-std) in Age = ', df1_outliers.shape[0]) 
+print('No. of outliers (mean-std) in SinceLastTrx = ', df2_outliers.shape[0])
